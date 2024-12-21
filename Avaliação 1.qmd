@@ -1,0 +1,109 @@
+---
+title: "Avaliação 1"
+author: "Rafael Jordane de Souza Oliveira"
+format: pdf
+editor: visual
+---
+
+## Questão 5
+
+Seja $X_1,...,X_n$ uma a.a.s. de tamanho $n$ de uma população de Bernoulli com probabilidade de sucesso $\theta$ (onde $0 < \theta < 1$) e seja $\hat{\theta}n = \frac{1}{n} \sum_{i=1}^n X_i$ um estimador para $\theta$.
+
+### **a)** Mostrando que $\hat{\theta}n$ é não viesado para $\theta$ para todo $n \geq 1$
+
+**Esperança de** $\hat{\theta}_n$
+
+A esperança do estimador $\hat{\theta}_n$ é dada por:
+
+$$
+\mathbb{E}[\hat{\theta}_n] = \mathbb{E}\left[\frac{1}{n} \sum_{i=1}^n X_i\right]
+$$
+
+Pela linearidade da esperança, podemos escrever:
+
+$$
+\mathbb{E}[\hat{\theta}_n] = \frac{1}{n} \sum_{i=1}^n \mathbb{E}[X_i]
+$$
+
+Sendo a esperança de cada $X_i$ igual a $\theta$, temos:
+
+$$
+\mathbb{E}[\hat{\theta}_n] = \frac{1}{n} \sum_{i=1}^n \theta
+$$
+
+Como a soma possui $n$ termos iguais a $\theta$, obtemos:
+
+$$
+\mathbb{E}[\hat{\theta}_n] = \theta
+$$
+
+------------------------------------------------------------------------
+
+**Viés de** $\hat{\theta}_n$
+
+O viés de um estimador $\hat{\theta}_n$ é definido como:
+
+$$
+\text{Viés}(\hat{\theta}_n) = \mathbb{E}[\hat{\theta}_n] - \theta
+$$
+
+Substituindo $\mathbb{E}[\hat{\theta}_n]$ pela expressão obtida anteriormente:
+
+$$
+\text{Viés}(\hat{\theta}_n) = \theta - \theta = 0
+$$
+
+Portanto, o viés de $\hat{\theta}_n$ é zero, o que significa que $\hat{\theta}_n$ é um **estimador não-viesado** para $\theta$.
+
+### **b) Mostrando que** $\hat{\theta}_n$ é consistente para $\theta$
+
+**Encontrando a Variância de** $\hat{\theta}_n$:
+
+$$
+Var[\hat{\theta_n}]= Var[ \frac1n \sum_{i=1}^n X_i]
+$$
+
+$$
+Var[\hat{\theta_n}]= \frac1{n^2} \sum_{i=1}^n Var[X_i]
+$$
+
+Sendo a Variância de cada $X_n$ a mesma e igual $Var[X] = \theta(1 - \theta)$ ao somarmos essa variância n vezes teremos:
+
+$$
+Var[\hat{\theta_n}]= \frac{ n\theta(1-\theta)}{n^2}
+$$
+
+$$
+Var[\hat{\theta_n}]= \frac{ \theta(1-\theta)}{n}
+$$
+
+Para convergência em probabilidade de $\hat{\theta_n}$ em $\theta$ podemos aplicar o teorema de Chebyshev, para qualquer $\epsilon \geq 1$:
+
+$$
+P(|\hat{\theta}_n - \theta| \geq \epsilon) \leq \frac{\text{Var}(\hat{\theta}_n)}{\epsilon^2} = \frac{\theta(1-\theta)}{n\epsilon^2}.
+$$
+
+Quando $n$ cresce, $\frac{\theta(1-\theta)}{n\epsilon^2} \to 0$. Portanto:
+
+$$
+ \lim_{n \to \infty} P(|\hat{\theta}_n - \theta| \geq \epsilon) = 0.
+$$
+
+Logo, $\hat\theta_n$ converge em probabilidade para $\theta$ e portanto $\hat{\theta_n}$ é um estimador consistente para $\theta$.
+
+###  c) Mostrando que $\hat\theta_n \aprox$
+
+click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
