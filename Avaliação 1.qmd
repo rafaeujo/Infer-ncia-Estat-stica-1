@@ -91,19 +91,97 @@ $$
 
 Logo, $\hat\theta_n$ converge em probabilidade para $\theta$ e portanto $\hat{\theta_n}$ é um estimador consistente para $\theta$.
 
-###  c) Mostrando que $\hat\theta_n \aprox$
+### c) Mostrando que $\hat\theta_n$ converge em distribuição em $N(\theta,\frac{\theta(1 - \theta)}{n})$
 
-click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+A CDA de $\hat{\theta}n$ *é* $F{\hat{\theta}_n}(x) = P(\hat{\theta}_n \leq x)$. Como $\hat{\theta}n = \frac{1}{n} \sum{i=1}^n X_i$ e os $X_i$ são independentes e identicamente distribuídas com $\mathbb{E}[X_i] = \theta$ e $\text{Var}(X_i) = \theta(1-\theta)$, a variância de $\hat{\theta}_n$ é $\text{Var}(\hat{\theta}_n) = \frac{\theta(1-\theta)}{n}$. Para analisar a convergência, consideramos a transformação padronizada $Z_n = \sqrt{n} \frac{\hat{\theta}n - \theta}{\sqrt{\theta(1-\theta)}}$*. Pelo Teorema Central do Limite,* $Z_n$ *converge em distribuição para* $N(0,1)$*, o que implica que* $F{Z_n}(z) \to \Phi(z)$, onde $\Phi(z)$ é a CDA da distribuição normal padrão. Ao retornar à escala original de $\hat{\theta}_n$, temos
+
+$F_{\hat{\theta}_n}(x) = F_{Z_n}\left(\sqrt{n} \frac{x - \theta}{\sqrt{\theta(1-\theta)}}\right).$
+
+Quando $n \to \infty$, $F_{Z_n}(z)$ converge para $\Phi(z)$, resultando em
+
+$F_{\hat{\theta}_n}(x) \to \Phi\left(\sqrt{n} \frac{x - \theta}{\sqrt{\theta(1-\theta)}}\right).$
+
+Como $\Phi$ é a CDA da normal $N(\theta, \frac{\theta(1-\theta)}{n})$, conclui-se que $F_{\hat{\theta}_n}(x) \to F_X(x)$, onde $F_X(x)$ é a CDA da $N\left(\theta, \frac{\theta(1-\theta)}{n}\right)$. Portanto, $\hat{\theta}_n \xrightarrow{d} N\left(\theta, \frac{\theta(1-\theta)}{n}\right)$.
+
+### d) Escrevendo um algoritmo (ou pseudo-codigo) para simular a lei fraca dos grandes números de Bernoulli.
+
+O pseudocódico pode ser visualizado a seguir:
+
+Input: n_max (número máximo de observações), p (probabilidade de sucesso), ε (tolerância) Output: Frequência média das simulações e verificação da lei
+
+1.  Inicializar vetor S de tamanho n_max com zeros
+2.  Para n de 1 até n_max faça:
+    a.  Gerar n amostras de uma variável aleatória de Bernoulli com parâmetro p (cada amostra é 0 ou 1 com probabilidade 1-p e p, respectivamente)
+    b.  Calcular a média das amostras: média_n = soma(amostras) / n
+    c.  Armazenar média_n no vetor S na posição n
+3.  Plotar os valores de S (eixo y) contra n (eixo x) para observar a convergência
+4.  Verificar a tolerância: Para cada n, verificar se \|S\[n\] - p\| \< ε
+5.  Imprimir o menor n para o qual \|S\[n\] - p\| \< ε é mantido a partir de um certo ponto
+
+### e) Escrevendo um algoritmo (ou pseudo-codigo) para simular o teorema central do limite De Moivre-Laplace.
+
+O pseudocódico pode ser visualizado a seguir:
+
+Input: n (número de ensaios), p (probabilidade de sucesso), num_simulações (número de simulações) Output: Histograma das médias padronizadas e sobreposição da curva da normal padrão
+
+1.  Inicializar vetor Z de tamanho num_simulações com zeros
+2.  Para i de 1 até num_simulações faça:
+    a.  Gerar n amostras de uma variável aleatória de Bernoulli com parâmetro p
+    b.  Calcular a soma dos sucessos: X = soma(amostras)
+    c.  Calcular a padronização: Z\[i\] = (X - n*p) / sqrt(n*p\*(1-p))
+3.  Plotar histograma dos valores de Z
+4.  Sobrepor à plotagem a densidade da normal padrão (N(0, 1)) para verificar a convergência
+
+### f) Rodando o código para simular a lei fraca dos grandes números de Bernoulli.
+
+Adaptando o algoritmo para a linguagem R teremos o seguinte código:
 
 ```{r}
-1 + 1
+n_max <- 1000
+p <- 0.5
+epsilon <- 0.05
+S <- numeric(n_max)
+
+for (n in 1:n_max) {
+  amostras <- rbinom(n, size = 1, prob = p)
+  S[n] <- mean(amostras)
+}
+
+dentro_tolerancia <- abs(S - p) < epsilon
+print(paste("Primeiro n onde a média fica dentro da tolerância:", which.max(dentro_tolerancia)))
+
+plot(1:n_max, S, type = "l", col = "blue", lwd = 2,
+     xlab = "Número de Observações (n)", ylab = "Média Amostral",
+     main = "Convergência da Média Amostral para p")
+abline(h = p, col = "red", lty = 2)
+
 ```
 
-You can add options to executable code like this
+O código simula a Lei Fraca dos Grandes Números, mostrando que a média amostral de variáveis Bernoulli com probabilidade $p$ converge para $p$ conforme o número de observações aumenta. Ele gera sucessivamente $n=1,2,…, n_{máx}$ amostras de Bernoulli, calcula a média amostral em cada caso e armazena os resultados em um vetor
+
+$S$. Em seguida, verifica a partir de qual $n$ a diferença entre a média amostral e $p$ permanece dentro de uma tolerância $\epsilon$, plotando a convergência das médias para $p$.
+
+### g) Rodando o código para simular o teorema central do limite De Moivre-Laplace.
+
+Adaptando o algorítmo do exercício e) para a linguagem R temos:
 
 ```{r}
-#| echo: false
-2 * 2
+n <- 100
+p <- 0.5
+num_sim <- 1000
+Z <- numeric(num_sim)
+
+for (i in 1:num_sim) {
+  amostras <- rbinom(n, size = 1, prob = p)
+  X <- sum(amostras)
+  Z[i] <- (X - n * p) / sqrt(n * p * (1 - p))
+}
+
+hist(Z, breaks = 30, probability = TRUE, col = "lightblue",
+     main = "Teorema Central do Limite",
+     xlab = "Valor Padronizado", ylab = "Densidade")
+curve(dnorm(x, mean = 0, sd = 1), col = "red", lwd = 2, add = TRUE)
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+O código faz uma simulação do Teorema Central do Limite de De Moivre-Laplace, aproximando uma distribuição binomial $B(n, p)$ por uma normal padrão $N(0, 1)$ após padronização. Ele realiza múltiplas simulações da soma de $n$ variáveis Bernoulli com probabilidade $p$, padroniza as somas subtraindo a média teórica $n \cdot p$ e dividindo pelo desvio padrão teórico $\sqrt{n \cdot p \cdot (1-p)}$, e armazena os resultados. O histograma das variáveis padronizadas é comparado graficamente à densidade da normal padrão para verificar a aproximação.
